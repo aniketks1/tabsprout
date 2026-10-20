@@ -1,0 +1,49 @@
+{
+  "name": "tabsprout",
+  "version": "1.0.0",
+  "description": "Automatic tab grouping and sorting with one click",
+  "type": "module",
+  "homepage": "https://aniketks1.github.io/tabsprout",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aniketks1/tabsprout.git"
+  },
+  "keywords": [
+    "chrome-extension",
+    "tab-groups",
+    "productivity",
+    "tab-manager",
+    "tab-sorter",
+    "tabsprout",
+    "manifest-v3"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite build --watch --mode development",
+    "build": "tsc && vite build",
+    "test": "node --experimental-strip-types tests/sorter.test.mjs",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "lucide-react": "^1.16.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.312",
+    "@types/node": "^22.13.10",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.1"
+  },
+  "overrides": {
+    "braces": "^3.0.3",
+    "micromatch": "^4.0.8",
+    "postcss-selector-parser": "^7.1.6"
+  }
+}

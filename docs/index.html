@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>TabSprout — Automatic Tab Grouping & Sorting With One Click</title>
+    <meta name="description"
+          content="Groups open tabs by domain, project, or topic with a single click to fight tab clutter. Minimal, premium, and 100% local."/>
+    <link rel="icon" type="image/png" href="icons/icon32.png"/>
+
+    <style>
+        /* Brand Theme Tokens: Sprout Green #9de440, Forest Pine #033220, Crisp Tab White #fafcf9 */
+        :root {
+            --bg: #fafcf9;
+            --card: #ffffff;
+            --card-border: #e2ebe3;
+            --card-hover: #f0f6f1;
+            --text: #033220;
+            --text-muted: #3b6653;
+            --primary: #9de440;
+            --primary-hover: #8fd433;
+            --primary-text: #033220;
+            --primary-glow: rgba(157, 228, 64, 0.35);
+            --badge-bg: rgba(157, 228, 64, 0.18);
+            --badge-border: rgba(157, 228, 64, 0.45);
+            --tab-bg: #f2f7f3;
+            --tab-border: #d4e2d6;
+            --nav-bg: rgba(250, 252, 249, 0.9);
+            --shadow-sm: 0 1px 3px rgba(3, 50, 32, 0.05);
+            --shadow-md: 0 6px 20px -2px rgba(3, 50, 32, 0.08);
+            --shadow-lg: 0 16px 36px -4px rgba(3, 50, 32, 0.12);
+        }
+
+        @media (prefers-color-scheme: dark) {
+      :root:not(.light) {
+        --bg: #0b0f14;
+        --card: #131922;
+        --card-border: #1e2633;
+        --card-hover: #1a222f;
+        --text: #fafcf9;
+        --text-muted: #8c9ba8;
+        --primary: #9de440;
+        --primary-hover: #adea59;
+        --primary-text: #0b0f14;
+        --primary-glow: rgba(157, 228, 64, 0.28);
+        --badge-bg: rgba(157, 228, 64, 0.12);
+        --badge-border: rgba(157, 228, 64, 0.32);
+        --tab-bg: #080b0f;
+        --tab-border: #18202b;
+        --nav-bg: rgba(11, 15, 20, 0.9);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+        --shadow-md: 0 6px 20px -2px rgba(0, 0, 0, 0.45);
+        --shadow-lg: 0 16px 36px -4px rgba(0, 0, 0, 0.65);
+      }
+    }
+
+    .dark {
+      --bg: #0b0f14;
+      --card: #131922;
+      --card-border: #1e2633;
+      --card-hover: #1a222f;
+      --text: #fafcf9;
+      --text-muted: #8c9ba8;
+      --primary: #9de440;
+      --primary-hover: #adea59;
+      --primary-text: #0b0f14;
+      --primary-glow: rgba(157, 228, 64, 0.28);
+      --badge-bg: rgba(157, 228, 64, 0.12);
+      --badge-border: rgba(157, 228, 64, 0.32);
+      --tab-bg: #080b0f;
+      --tab-border: #18202b;
+      --nav-bg: rgba(11, 15, 20, 0.9);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+      --shadow-md: 0 6px 20px -2px rgba(0, 0, 0, 0.45);
+      --shadow-lg: 0 16px 36px -4px rgba(0, 0, 0, 0.65);
+    }
+
+    .light {
+            --bg: #fafcf9;
+            --card: #ffffff;
+            --card-border: #e2ebe3;
+            --card-hover: #f0f6f1;
+            --text: #033220;
+            --text-muted: #3b6653;
+            --primary: #9de440;
+            --primary-hover: #8fd433;
+            --primary-text: #033220;
+            --primary-glow: rgba(157, 228, 64, 0.35);
+            --badge-bg: rgba(157, 228, 64, 0.18);
+            --badge-border: rgba(157, 228, 64, 0.45);
+            --tab-bg: #f2f7f3;
+            --tab-border: #d4e2d6;
+            --nav-bg: rgba(250, 252, 249, 0.9);
+            --shadow-sm: 0 1px 3px rgba(3, 50, 32, 0.05);
+            --shadow-md: 0 6px 20px -2px rgba(3, 50, 32, 0.08);
+            --shadow-lg: 0 16px 36px -4px rgba(3, 50, 32, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.25s ease, border-color 0.25s ease, color 0.2s ease;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header & Navigation */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background-color: var(--nav-bg);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 68px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 700;
+            font-size: 1.15rem;
+            letter-spacing: -0.02em;
+        }
+
+        .brand img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.15s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+        }
+
+        .theme-toggle-btn {
+            background: transparent;
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle-btn:hover {
+            background-color: var(--card-hover);
+            color: var(--text);
+        }
+
+        .btn-cta-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            background-color: var(--primary);
+            color: var(--primary-text);
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px var(--primary-glow);
+        }
+
+        .btn-cta-nav:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 88px 0 64px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-glow {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 520px;
+            height: 260px;
+            background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background-color: var(--badge-bg);
+            border: 1px solid var(--badge-border);
+            border-radius: 9999px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 24px;
+            text-decoration: none;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.4rem, 5.5vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -0.035em;
+            line-height: 1.15;
+            max-width: 840px;
+            margin: 0 auto 20px;
+            color: var(--text);
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+            text-shadow: 0 0 24px var(--primary-glow);
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: var(--text-muted);
+            max-width: 660px;
+            margin: 0 auto 36px;
+            font-weight: 400;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 56px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            background-color: var(--primary);
+            color: var(--primary-text);
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            box-shadow: 0 4px 20px var(--primary-glow);
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--primary-glow);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 24px;
+            background-color: var(--card);
+            border: 1px solid var(--card-border);
+            color: var(--text);
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--card-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Simulator */
+        .simulator-wrap {
+            max-width: 820px;
+            margin: 0 auto;
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            text-align: left;
+            position: relative;
+        }
+
+        .browser-header {
+            background: var(--tab-bg);
+            border-bottom: 1px solid var(--card-border);
+            padding: 12px 16px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 6px;
+            padding-bottom: 12px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .dot-red {
+            background: #ef4444;
+        }
+
+        .dot-yellow {
+            background: #eab308;
+        }
+
+        .dot-green {
+            background: #9de440;
+        }
+
+        .tab-bar {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 0px;
+            flex: 1;
+            scrollbar-width: none;
+        }
+
+        .tab-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .sim-tab {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            color: var(--text);
+            white-space: nowrap;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .group-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #033220;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .group-sprout {
+            background-color: #9de440;
+        }
+
+        .group-blue {
+            background-color: #60a5fa;
+        }
+
+        .group-amber {
+            background-color: #fbbf24;
+        }
+
+        .group-pink {
+            background-color: #f472b6;
+        }
+
+        .simulator-body {
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            background: var(--card);
+        }
+
+        .sim-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .sim-controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-sim-action {
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-sim-sort {
+            background-color: var(--primary);
+            color: var(--primary-text);
+            box-shadow: 0 4px 14px var(--primary-glow);
+        }
+
+        .btn-sim-sort:hover {
+            background-color: var(--primary-hover);
+            transform: scale(1.02);
+        }
+
+        .btn-sim-undo {
+            background-color: var(--card);
+            border: 1px solid var(--card-border);
+            color: var(--text);
+        }
+
+        .btn-sim-undo:hover {
+            background-color: var(--card-hover);
+        }
+
+        /* Features Grid */
+        .features {
+            padding: 88px 0;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 640px;
+            margin: 0 auto 56px;
+        }
+
+        .section-header h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 14px;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--badge-bg);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+            border: 1px solid var(--badge-border);
+        }
+
+        .feature-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        /* Strategy Tabs Section */
+        .strategy-section {
+            padding: 88px 0;
+            background: var(--tab-bg);
+            border-top: 1px solid var(--card-border);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .strategy-box {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 880px;
+            margin: 0 auto;
+            box-shadow: var(--shadow-md);
+        }
+
+        .strategy-nav {
+            display: flex;
+            gap: 8px;
+            padding: 4px;
+            background: var(--tab-bg);
+            border-radius: 12px;
+            margin-bottom: 28px;
+            border: 1px solid var(--card-border);
+        }
+
+        .strategy-btn {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .strategy-btn.active {
+            background: var(--card);
+            color: var(--text);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .strategy-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .strategy-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Steps */
+        .steps {
+            padding: 88px 0;
+        }
+
+        .step-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+            margin-top: 48px;
+        }
+
+        .step-item {
+            position: relative;
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .step-num {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: var(--primary-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin: 0 auto 18px;
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        .step-item h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .step-item p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* CTA Section */
+        .cta-banner {
+            margin: 40px auto 88px;
+            background: linear-gradient(135deg, rgba(157, 228, 64, 0.15) 0%, rgba(3, 50, 32, 0.1) 100%);
+            border: 1px solid var(--badge-border);
+            border-radius: 24px;
+            padding: 64px 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-banner h2 {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .cta-banner p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 580px;
+            margin: 0 auto 36px;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--card-border);
+            padding: 48px 0;
+            background-color: var(--bg);
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+
+        .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--text);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 56px 0 40px;
+            }
+
+            .simulator-body {
+                padding: 20px 16px;
+            }
+
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .strategy-box {
+                padding: 24px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sticky Navbar -->
+<header>
+    <div class="container nav-inner">
+        <a href="#" class="brand">
+            <img src="icons/icon48.png" alt="TabSprout logo"/>
+            <span>TabSprout</span>
+        </a>
+
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="https://github.com/aniketks1/tabsprout" target="_blank" rel="noopener">GitHub</a>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <button id="themeToggleBtn" class="theme-toggle-btn" title="Toggle Light/Dark Theme"
+                    aria-label="Toggle Theme">
+                <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+            </button>
+
+            <a href="https://github.com/aniketks1/tabsprout" target="_blank" rel="noopener" class="btn-cta-nav">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path>
+                    <path d="M9 18c-4.51 2-5-2-7-2"></path>
+                </svg>
+                <span>Star on GitHub</span>
+            </a>
+        </div>
+    </div>
+</header>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-glow"></div>
+    <div class="container" style="position: relative; z-index: 1;">
+        <a href="https://github.com/aniketks1/tabsprout" target="_blank" class="badge-pill">
+            <span>🌱 TabSprout v1.0</span>
+            <span>•</span>
+            <span>Manifest V3 Ready</span>
+        </a>
+
+        <h1>Automatic tab grouping and sorting with <span>one click</span>.</h1>
+        <p>
+            Fight browser tab clutter effortlessly. TabSprout groups and color-codes your open tabs by domain, project,
+            or topic with zero latency and 100% on-device privacy.
+        </p>
+
+        <div class="hero-actions">
+            <a href="https://github.com/aniketks1/tabsprout#installation--setup" target="_blank" class="btn-primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>Get TabSprout Free</span>
+            </a>
+
+            <a href="https://github.com/aniketks1/tabsprout" target="_blank" class="btn-secondary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <polygon
+                            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                <span>View Source</span>
+            </a>
+        </div>
+
+        <!-- Interactive Tab Simulator -->
+        <div class="simulator-wrap">
+            <div class="browser-header">
+                <div class="browser-dots">
+                    <div class="dot dot-red"></div>
+                    <div class="dot dot-yellow"></div>
+                    <div class="dot dot-green"></div>
+                </div>
+                <div id="simTabBar" class="tab-bar">
+                    <!-- Dynamically populated tabs -->
+                </div>
+            </div>
+
+            <div class="simulator-body">
+                <div id="simStatus" class="sim-status">
+                    <span>● Disordered: 8 open tabs scattered across 4 domains</span>
+                </div>
+
+                <div class="sim-controls">
+                    <button id="simSortBtn" class="btn-sim-action btn-sim-sort">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                            <polyline points="2 17 12 22 22 17"></polyline>
+                            <polyline points="2 12 12 17 22 12"></polyline>
+                        </svg>
+                        <span>Organize Tabs Now</span>
+                    </button>
+
+                    <button id="simUndoBtn" class="btn-sim-action btn-sim-undo" style="display: none;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                            <path d="M3 3v5h5"></path>
+                        </svg>
+                        <span>Undo</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Grid -->
+<section id="features" class="features">
+    <div class="container">
+        <div class="section-header">
+            <h2>Built to conquer browser chaos</h2>
+            <p>Three flexible grouping strategies, native Chrome group colors, and zero telemetry.</p>
+        </div>
+
+        <div class="grid-3">
+            <!-- Feature 1 -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg>
+                </div>
+                <h3>Domain Clustering</h3>
+                <p>Instant hostname extraction with brand dictionaries (e.g. GitHub, Google Docs, Notion, YouTube) and
+                    intelligent subdomain grouping.</p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
+                    </svg>
+                </div>
+                <h3>Smart Topic Heuristics</h3>
+                <p>Clusters Google, Bing, and DuckDuckGo queries by research theme and extracts dominant keywords from
+                    page titles without external AI APIs.</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"></path>
+                        <path d="M8 10v4"></path>
+                        <path d="M12 10v2"></path>
+                        <path d="M16 10v6"></path>
+                    </svg>
+                </div>
+                <h3>Custom Project Rules</h3>
+                <p>Create custom workspaces (e.g. "Sprint 42", "Client Alpha") with wildcard match patterns (<code>*jira*</code>,
+                    <code>*github*</code>) and custom colors.</p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                        <path d="M3 3v5h5"></path>
+                    </svg>
+                </div>
+                <h3>1-Click Undo Snapshots</h3>
+                <p>Every sort captures a complete pre-grouping snapshot. Revert all tabs back to their original
+                    arrangement in one click anytime.</p>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+                        <path d="M7 8h10"></path>
+                        <path d="M7 12h10"></path>
+                        <path d="M7 16h10"></path>
+                    </svg>
+                </div>
+                <h3>Alt+Shift+S Quick Trigger</h3>
+                <p>Instantly sort the active window using a global keyboard shortcut without even opening the popup
+                    interface.</p>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path>
+                    </svg>
+                </div>
+                <h3>100% On-Device Privacy</h3>
+                <p>Zero tracking, zero telemetry, and zero remote network requests. Your tab URLs and titles never leave
+                    your local browser sandbox.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Strategy Selector Interactive Section -->
+<section class="strategy-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Three ways to organize your workflow</h2>
+            <p>Pick the strategy that matches how your brain works today.</p>
+        </div>
+
+        <div class="strategy-box">
+            <div class="strategy-nav">
+                <button class="strategy-btn active" data-target="strat-domain">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                    </svg>
+                    <span>By Domain</span>
+                </button>
+                <button class="strategy-btn" data-target="strat-topic">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
+                    </svg>
+                    <span>By Topic</span>
+                </button>
+                <button class="strategy-btn" data-target="strat-project">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"></path>
+                    </svg>
+                    <span>By Project</span>
+                </button>
+            </div>
+
+            <div id="strat-domain" class="strategy-content active">
+                <h4 style="font-size: 1.1rem; margin-bottom: 8px;">Deterministic & Instant</h4>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">
+                    Extracts root domains, trims <code>www.</code>, cleans up complex TLDs (<code>co.uk</code>, <code>com.au</code>),
+                    and maps them into branded titles like <strong>GitHub</strong>, <strong>Google Drive</strong>, or
+                    <strong>Linear</strong>.
+                </p>
+                <div style="background: var(--tab-bg); padding: 16px; border-radius: 12px; border: 1px solid var(--card-border); font-family: monospace; font-size: 0.85rem;">
+                    github.com/facebook/react + github.com/vitejs/vite &rarr; <span class="group-pill group-sprout">GitHub (2)</span>
+                </div>
+            </div>
+
+            <div id="strat-topic" class="strategy-content">
+                <h4 style="font-size: 1.1rem; margin-bottom: 8px;">Smart Search-Intent Heuristics</h4>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">
+                    Recognizes research queries on Google, Bing, and DuckDuckGo and groups matching search queries
+                    together with shared title keywords.
+                </p>
+                <div style="background: var(--tab-bg); padding: 16px; border-radius: 12px; border: 1px solid var(--card-border); font-family: monospace; font-size: 0.85rem;">
+                    google.com/search?q=react+hooks + react.dev/reference &rarr; <span class="group-pill group-blue">React Hooks (2)</span>
+                </div>
+            </div>
+
+            <div id="strat-project" class="strategy-content">
+                <h4 style="font-size: 1.1rem; margin-bottom: 8px;">Custom Priority Match Rules</h4>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">
+                    Configure your own workspaces with wildcard patterns or regular expressions. Tabs matching your
+                    rules are automatically filed into the right group.
+                </p>
+                <div style="background: var(--tab-bg); padding: 16px; border-radius: 12px; border: 1px solid var(--card-border); font-family: monospace; font-size: 0.85rem;">
+                    Patterns: <code>*jira*</code>, <code>*figma*</code>, <code>*confluence*</code> &rarr; <span
+                        class="group-pill group-pink">Sprint Q4 (3)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section id="how-it-works" class="steps">
+    <div class="container">
+        <div class="section-header">
+            <h2>Three clicks to total tab sanity</h2>
+            <p>No configuration required. TabSprout works right out of the box.</p>
+        </div>
+
+        <div class="step-list">
+            <div class="step-item">
+                <div class="step-num">1</div>
+                <h3>Collect Your Tabs</h3>
+                <p>Browse normally without worrying about how many tabs you have open across multiple windows.</p>
+            </div>
+
+            <div class="step-item">
+                <div class="step-num">2</div>
+                <h3>Click Organize</h3>
+                <p>Click the TabSprout toolbar icon or press <kbd
+                        style="background: var(--tab-bg); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--card-border); font-size: 0.8rem;">Alt+Shift+S</kbd>.
+                </p>
+            </div>
+
+            <div class="step-item">
+                <div class="step-num">3</div>
+                <h3>Enjoy Clean Tabs</h3>
+                <p>Your tabs are grouped into native, color-coded Chrome groups. Inactive groups collapse
+                    automatically.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Banner -->
+<section class="container">
+    <div class="cta-banner">
+        <h2>Ready to declutter your browser?</h2>
+        <p>Download TabSprout for Chrome today. 100% free, open-source, and private.</p>
+        <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+            <a href="https://github.com/aniketks1/tabsprout#installation--setup" target="_blank" class="btn-primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>Install TabSprout</span>
+            </a>
+            <a href="https://github.com/aniketks1/tabsprout" target="_blank" class="btn-secondary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon
+                            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                <span>Star on GitHub</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container footer-inner">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="icons/icon32.png" width="22" height="22" alt="TabSprout" style="border-radius: 4px;"/>
+            <span style="font-weight: 700; color: var(--text);">TabSprout</span>
+            <span>&copy; 2026. Released under the MIT License.</span>
+        </div>
+
+        <div class="footer-links">
+            <a href="https://github.com/aniketks1/tabsprout/blob/main/PRIVACY_POLICY.md" target="_blank">Privacy
+                Policy</a>
+            <a href="https://github.com/aniketks1/tabsprout" target="_blank">GitHub Repository</a>
+            <a href="https://github.com/aniketks1/tabsprout/issues" target="_blank">Issues & Feedback</a>
+        </div>
+    </div>
+</footer>
+
+<!-- Interactive Simulator & Theme Toggle Script -->
+<script>
+    // Theme Management
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const root = document.documentElement;
+
+    function getInitialTheme() {
+        const saved = localStorage.getItem('tabsprout_web_theme');
+        if (saved) return saved;
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    function setTheme(theme) {
+        root.classList.remove('light', 'dark');
+        root.classList.add(theme);
+        localStorage.setItem('tabsprout_web_theme', theme);
+    }
+
+    setTheme(getInitialTheme());
+
+    themeToggleBtn.addEventListener('click', () => {
+        const isDark = root.classList.contains('dark') ||
+            (!root.classList.contains('light') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        setTheme(isDark ? 'light' : 'dark');
+    });
+
+    // Tab Simulator Logic
+    const rawTabs = [
+        {id: 1, title: 'facebook/react: PR #42', domain: 'github.com', group: 'GitHub', color: 'group-sprout'},
+        {
+            id: 2,
+            title: 'Google Docs - Q4 Project Proposal',
+            domain: 'docs.google.com',
+            group: 'Google Docs',
+            color: 'group-blue'
+        },
+        {
+            id: 3,
+            title: 'Stack Overflow: Chrome MV3 tabs',
+            domain: 'stackoverflow.com',
+            group: 'Research',
+            color: 'group-amber'
+        },
+        {
+            id: 4,
+            title: 'vitejs/vite: Next Generation Tooling',
+            domain: 'github.com',
+            group: 'GitHub',
+            color: 'group-sprout'
+        },
+        {
+            id: 5,
+            title: 'Google Search: react hooks guide',
+            domain: 'google.com',
+            group: 'Research',
+            color: 'group-amber'
+        },
+        {id: 6, title: 'r/webdev: Chrome extension tips', domain: 'reddit.com', group: 'Reddit', color: 'group-pink'},
+        {
+            id: 7,
+            title: 'Google Docs - Meeting Notes Oct 20',
+            domain: 'docs.google.com',
+            group: 'Google Docs',
+            color: 'group-blue'
+        },
+        {id: 8, title: 'GitHub - aniketks1/tabsprout', domain: 'github.com', group: 'GitHub', color: 'group-sprout'}
+    ];
+
+    const simTabBar = document.getElementById('simTabBar');
+    const simStatus = document.getElementById('simStatus');
+    const simSortBtn = document.getElementById('simSortBtn');
+    const simUndoBtn = document.getElementById('simUndoBtn');
+
+    let isOrganized = false;
+
+    function renderTabs() {
+        simTabBar.innerHTML = '';
+
+        if (!isOrganized) {
+            rawTabs.forEach(t => {
+                const tab = document.createElement('div');
+                tab.className = 'sim-tab';
+                tab.innerHTML = `<span>📄</span><span>${t.title}</span>`;
+                simTabBar.appendChild(tab);
+            });
+            simStatus.innerHTML = '<span>● Disordered: 8 open tabs scattered across 4 domains</span>';
+            simSortBtn.style.display = 'inline-flex';
+            simUndoBtn.style.display = 'none';
+        } else {
+            const groups = {
+                'GitHub': {color: 'group-sprout', tabs: rawTabs.filter(t => t.group === 'GitHub')},
+                'Google Docs': {color: 'group-blue', tabs: rawTabs.filter(t => t.group === 'Google Docs')},
+                'Research': {color: 'group-amber', tabs: rawTabs.filter(t => t.group === 'Research')},
+                'Reddit': {color: 'group-pink', tabs: rawTabs.filter(t => t.group === 'Reddit')}
+            };
+
+            Object.entries(groups).forEach(([name, data]) => {
+                const pill = document.createElement('div');
+                pill.className = `group-pill ${data.color}`;
+                pill.textContent = `${name} (${data.tabs.length})`;
+                simTabBar.appendChild(pill);
+
+                data.tabs.forEach(t => {
+                    const tab = document.createElement('div');
+                    tab.className = 'sim-tab';
+                    tab.innerHTML = `<span>📄</span><span>${t.title}</span>`;
+                    simTabBar.appendChild(tab);
+                });
+            });
+
+            simStatus.innerHTML = '<span style="color: #9de440; font-weight: 600;">✔ Organized: 8 tabs sorted into 4 color-coded tab groups</span>';
+            simSortBtn.style.display = 'none';
+            simUndoBtn.style.display = 'inline-flex';
+        }
+    }
+
+    renderTabs();
+
+    simSortBtn.addEventListener('click', () => {
+        isOrganized = true;
+        renderTabs();
+    });
+
+    simUndoBtn.addEventListener('click', () => {
+        isOrganized = false;
+        renderTabs();
+    });
+
+    // Strategy Tabs Switching
+    const stratBtns = document.querySelectorAll('.strategy-btn');
+    const stratContents = document.querySelectorAll('.strategy-content');
+
+    stratBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            stratBtns.forEach(b => b.classList.remove('active'));
+            stratContents.forEach(c => c.classList.remove('active'));
+
+            btn.classList.add('active');
+            const target = document.getElementById(btn.dataset.target);
+            if (target) target.classList.add('active');
+        });
+    });
+</script>
+</body>
+</html>
