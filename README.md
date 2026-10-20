@@ -11,6 +11,7 @@
 
 <p align="center">
   <a href="https://aniketks1.github.io/tabsprout/"><img src="https://img.shields.io/badge/Website-Live_Demo-9de440?style=for-the-badge&logoColor=033220" alt="Live Demo" /></a>
+  <a href="https://github.com/aniketks1/tabsprout/releases/latest"><img src="https://img.shields.io/badge/Download-ZIP_Release-0b0f14?style=for-the-badge&logo=github" alt="Download ZIP" /></a>
   <a href="https://github.com/aniketks1/tabsprout/releases"><img src="https://img.shields.io/badge/Version-1.0.0-0b0f14?style=for-the-badge" alt="Version 1.0.0" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License: MIT" /></a>
   <img src="https://img.shields.io/badge/Chrome-Manifest_V3-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Chrome MV3" />
@@ -19,7 +20,7 @@
 ---
 
 <p align="center">
-  <img src="design/home.png" alt="TabSprout Landing Page and Interface" width="100%" style="border-radius: 12px; box-shadow: 0 12px 32px rgba(0,0,0,0.15);" />
+  <img src="design/marquee-banner-promo-tile.png" alt="TabSprout Landing Page and Interface" width="100%" style="border-radius: 12px; box-shadow: 0 12px 32px rgba(0,0,0,0.15);" />
 </p>
 
 ---
@@ -34,10 +35,10 @@
   - [3. By Project](#3-by-project)
 - [Interactive Preview & Undo](#interactive-preview--undo)
 - [Design & Theme System](#design--theme-system)
-- [Installation & Setup](#installation--setup)
-  - [Prerequisites](#prerequisites)
-  - [Build From Source](#build-from-source)
-  - [Load Unpacked in Chrome](#load-unpacked-in-chrome)
+- [How to Install & Use](#how-to-install--use)
+  - [Method 1: Chrome Web Store (Recommended)](#method-1-chrome-web-store-recommended)
+  - [Method 2: Download ZIP from GitHub Releases](#method-2-download-zip-from-github-releases)
+  - [Method 3: Build From Source (Developers)](#method-3-build-from-source-developers)
 - [GitHub Pages Landing Page](#github-pages-landing-page)
 - [Keyboard Shortcuts](#keyboard-shortcuts)
 - [Architecture & Tech Stack](#architecture--tech-stack)
@@ -72,19 +73,25 @@ Modern web workflows often lead to 20, 50, or even 100+ open browser tabs spread
 ## Grouping Strategies
 
 ### 1. By Domain
-*Groups tabs by their website or platform.*
+
+_Groups tabs by their website or platform._
+
 - **Subdomain Intelligence**: Automatically extracts root domains (e.g. `docs.google.com` and `mail.google.com` group under **Google**).
 - **Brand Clean Titles**: Strips `.com`, `.org`, and technical TLD suffixes, presenting clean titles like **GitHub**, **YouTube**, and **StackOverflow**.
 - **User Blacklist Support**: Automatically skips browser-internal pages (`chrome://`, `edge://`) and user-excluded domains.
 
 ### 2. By Topic
-*Groups tabs by context and research intent.*
+
+_Groups tabs by context and research intent._
+
 - **Search Query Extraction**: Recognizes search queries from Google, Bing, DuckDuckGo, and Yahoo, grouping results by topic.
 - **Natural Keyword Clustering**: Analyzes page titles, strips common noise and stop-words, and aggregates tabs exploring related topics.
 - **Adaptive Fallback**: Gracefully falls back to domain clustering for unclustered singletons.
 
 ### 3. By Project
-*Custom user-defined rules tailored to your workflow.*
+
+_Custom user-defined rules tailored to your workflow._
+
 - **Wildcard & Regex Matching**: Create rules like `*jira*`, `*github.com/my-org/*`, or `regex:^https:\/\/linear\.app`.
 - **Custom Color Assignment**: Pick from Chrome’s 8 native group colors (`blue`, `purple`, `green`, `yellow`, `red`, `pink`, `cyan`, `grey`).
 - **Priority-Driven**: Evaluates top-to-bottom so high-priority sprint or client rules match first.
@@ -93,12 +100,12 @@ Modern web workflows often lead to 20, 50, or even 100+ open browser tabs spread
 
 ## Interactive Preview & Undo
 
-| Feature | Description |
-| :--- | :--- |
-| **Drawer Preview** | Toggle the live preview drawer in the popup to see exactly how many groups and tabs will be created. |
+| Feature               | Description                                                                                                        |
+| :-------------------- | :----------------------------------------------------------------------------------------------------------------- |
+| **Drawer Preview**    | Toggle the live preview drawer in the popup to see exactly how many groups and tabs will be created.               |
 | **Pre-Sort Snapshot** | Captures the exact tab index, window ID, and pre-existing group structure before executing any grouping operation. |
-| **Undo Toast** | Reverts tabs to their original ungrouped or previous state in one click. |
-| **Ungroup All** | Quick action button in header to disband all groups in the active window at once. |
+| **Undo Toast**        | Reverts tabs to their original ungrouped or previous state in one click.                                           |
+| **Ungroup All**       | Quick action button in header to disband all groups in the active window at once.                                  |
 
 ---
 
@@ -113,44 +120,70 @@ TabSprout features a distinctive brand aesthetic inspired by fresh growth and mi
 
 ---
 
-## Installation & Setup
+## How to Install & Use
 
-### Prerequisites
-- [Node.js](https://nodejs.org/) (v18.0.0 or higher, tested on v22)
-- [npm](https://www.npmjs.com/) (v9.0.0 or higher)
-- Google Chrome, Brave, Edge, or any Chromium browser with Tab Groups support
+You can install TabSprout using any of the following three methods:
 
-### Build From Source
+### Method 1: Chrome Web Store (Recommended)
+
+1. Visit the [TabSprout Chrome Web Store Listing](https://chromewebstore.google.com/). _(Link will activate once public store review is approved)._
+2. Click **Add to Chrome**.
+3. Pin **TabSprout** to your browser toolbar for quick one-click access.
+
+---
+
+### Method 2: Download ZIP from GitHub Releases
+
+If you want to use the extension directly without cloning the repository or running build tools:
+
+1. Go to the [GitHub Releases](https://github.com/aniketks1/tabsprout/releases/latest) page.
+2. Under **Assets**, download **`tabsprout-v1.0.0.zip`**.
+3. Extract the downloaded ZIP file to a convenient folder on your computer.
+4. Open Google Chrome (or any Chromium browser like Brave or Microsoft Edge) and navigate to:
+   ```
+   chrome://extensions
+   ```
+5. Enable the **Developer mode** toggle in the top-right corner.
+6. Click the **Load unpacked** button in the top-left corner.
+7. Select the extracted folder (the directory containing `manifest.json`).
+8. Click the puzzle icon in Chrome’s toolbar and pin **TabSprout**.
+
+---
+
+### Method 3: Build From Source (Developers)
+
+If you wish to contribute, inspect the TypeScript source code, or customize the extension:
 
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/aniketks1/tabsprout.git
    cd tabsprout
    ```
 
 2. **Install dependencies**:
+
    ```bash
    npm install
    ```
 
 3. **Run unit tests**:
+
    ```bash
    npm test
    ```
 
 4. **Build the extension**:
+
    ```bash
    npm run build
    ```
+
    The compiled, production-ready extension will be output to the `dist/` directory.
 
-### Load Unpacked in Chrome
-
-1. Open your browser and navigate to `chrome://extensions`.
-2. Enable **Developer mode** in the top-right corner.
-3. Click the **Load unpacked** button.
-4. Select the `dist/` folder inside the `tabsprout` directory.
-5. Click the puzzle icon in Chrome’s toolbar and pin **TabSprout** for quick access.
+5. **Load into Chrome**:
+   - Open `chrome://extensions` and ensure **Developer mode** is enabled.
+   - Click **Load unpacked** and select the `dist/` folder inside your cloned repository.
 
 ---
 
@@ -159,6 +192,7 @@ TabSprout features a distinctive brand aesthetic inspired by fresh growth and mi
 A dedicated, animated, responsive landing page is included in the `/docs` directory. It uses vanilla HTML5, CSS3, and JavaScript with zero external runtime dependencies.
 
 ### Deploying the Landing Page:
+
 1. Navigate to your repository settings on GitHub: **Settings** > **Pages**.
 2. Under **Build and deployment** > **Source**, select **Deploy from a branch**.
 3. Choose branch `main` and folder `/docs`.
@@ -171,11 +205,11 @@ A dedicated, animated, responsive landing page is included in the `/docs` direct
 
 ## Keyboard Shortcuts
 
-| Shortcut | Description | Scope |
-| :--- | :--- | :--- |
+| Shortcut          | Description                                                                      | Scope               |
+| :---------------- | :------------------------------------------------------------------------------- | :------------------ |
 | `Alt + Shift + S` | Organizes open tabs in the active window immediately using your default strategy | Global (In-Browser) |
 
-> *Tip: You can customize or rebind this shortcut at any time by visiting `chrome://extensions/shortcuts`.*
+> _Tip: You can customize or rebind this shortcut at any time by visiting `chrome://extensions/shortcuts`._
 
 ---
 
