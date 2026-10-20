@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Privacy Policy - TabSprout</title>
+    <meta name="description"
+          content="Privacy Policy for TabSprout Chrome Extension. Learn how your data is handled strictly on-device with zero telemetry."/>
+    <link rel="icon" type="image/png" href="icons/icon32.png"/>
+
+    <style>
+        /* Brand Theme Tokens: Sprout Green #9de440, Forest Pine #033220, Crisp Tab White #fafcf9 */
+        :root {
+            --bg: #fafcf9;
+            --card: #ffffff;
+            --card-border: #e2ebe3;
+            --card-hover: #f0f6f1;
+            --text: #033220;
+            --text-muted: #3b6653;
+            --primary: #9de440;
+            --primary-hover: #8fd433;
+            --primary-text: #033220;
+            --primary-glow: rgba(157, 228, 64, 0.35);
+            --badge-bg: rgba(157, 228, 64, 0.18);
+            --badge-border: rgba(157, 228, 64, 0.45);
+            --tab-bg: #f2f7f3;
+            --tab-border: #d4e2d6;
+            --nav-bg: rgba(250, 252, 249, 0.9);
+            --shadow-sm: 0 1px 3px rgba(3, 50, 32, 0.05);
+            --shadow-md: 0 6px 20px -2px rgba(3, 50, 32, 0.08);
+            --shadow-lg: 0 16px 36px -4px rgba(3, 50, 32, 0.12);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not(.light) {
+                --bg: #0b0f14;
+                --card: #131922;
+                --card-border: #1e2633;
+                --card-hover: #1a222f;
+                --text: #fafcf9;
+                --text-muted: #8c9ba8;
+                --primary: #9de440;
+                --primary-hover: #adea59;
+                --primary-text: #0b0f14;
+                --primary-glow: rgba(157, 228, 64, 0.28);
+                --badge-bg: rgba(157, 228, 64, 0.12);
+                --badge-border: rgba(157, 228, 64, 0.32);
+                --tab-bg: #080b0f;
+                --tab-border: #18202b;
+                --nav-bg: rgba(11, 15, 20, 0.9);
+                --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+                --shadow-md: 0 6px 20px -2px rgba(0, 0, 0, 0.45);
+                --shadow-lg: 0 16px 36px -4px rgba(0, 0, 0, 0.65);
+            }
+        }
+
+        .dark {
+            --bg: #0b0f14;
+            --card: #131922;
+            --card-border: #1e2633;
+            --card-hover: #1a222f;
+            --text: #fafcf9;
+            --text-muted: #8c9ba8;
+            --primary: #9de440;
+            --primary-hover: #adea59;
+            --primary-text: #0b0f14;
+            --primary-glow: rgba(157, 228, 64, 0.28);
+            --badge-bg: rgba(157, 228, 64, 0.12);
+            --badge-border: rgba(157, 228, 64, 0.32);
+            --tab-bg: #080b0f;
+            --tab-border: #18202b;
+            --nav-bg: rgba(11, 15, 20, 0.9);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+            --shadow-md: 0 6px 20px -2px rgba(0, 0, 0, 0.45);
+            --shadow-lg: 0 16px 36px -4px rgba(0, 0, 0, 0.65);
+        }
+
+        .light {
+            --bg: #fafcf9;
+            --card: #ffffff;
+            --card-border: #e2ebe3;
+            --card-hover: #f0f6f1;
+            --text: #033220;
+            --text-muted: #3b6653;
+            --primary: #9de440;
+            --primary-hover: #8fd433;
+            --primary-text: #033220;
+            --primary-glow: rgba(157, 228, 64, 0.35);
+            --badge-bg: rgba(157, 228, 64, 0.18);
+            --badge-border: rgba(157, 228, 64, 0.45);
+            --tab-bg: #f2f7f3;
+            --tab-border: #d4e2d6;
+            --nav-bg: rgba(250, 252, 249, 0.9);
+            --shadow-sm: 0 1px 3px rgba(3, 50, 32, 0.05);
+            --shadow-md: 0 6px 20px -2px rgba(3, 50, 32, 0.08);
+            --shadow-lg: 0 16px 36px -4px rgba(3, 50, 32, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.25s ease, border-color 0.25s ease, color 0.2s ease;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header without navigation */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background-color: var(--nav-bg);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 68px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 700;
+            font-size: 1.15rem;
+            letter-spacing: -0.02em;
+        }
+
+        .brand img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--text);
+            background-color: var(--card-hover);
+        }
+
+        .theme-toggle-btn {
+            background: transparent;
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle-btn:hover {
+            background-color: var(--card-hover);
+            color: var(--text);
+        }
+
+        /* Content Card */
+        .policy-container {
+            max-width: 840px;
+            margin: 48px auto 80px;
+            background-color: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 48px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .policy-header {
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 24px;
+            margin-bottom: 32px;
+        }
+
+        .policy-header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .policy-header .last-updated {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+
+        .policy-section {
+            margin-bottom: 32px;
+        }
+
+        .policy-section h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .policy-section p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+        }
+
+        .policy-section ul {
+            list-style-type: disc;
+            margin-left: 20px;
+            margin-bottom: 16px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .policy-section ul li {
+            margin-bottom: 8px;
+        }
+
+        .policy-section strong {
+            color: var(--text);
+        }
+
+        .highlight-box {
+            background-color: var(--tab-bg);
+            border: 1px solid var(--card-border);
+            border-left: 4px solid var(--primary);
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            color: var(--text);
+            font-size: 0.92rem;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--card-border);
+            padding: 32px 0;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+
+        .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .footer-links a:hover {
+            color: var(--text);
+        }
+
+        @media (max-width: 640px) {
+            .policy-container {
+                padding: 24px;
+                margin: 24px auto 48px;
+            }
+            .policy-header h1 {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header (Navigation Removed) -->
+<header>
+    <div class="container nav-inner">
+        <a href="index.html" class="brand">
+            <img src="icons/icon32.png" alt="TabSprout"/>
+            <span>TabSprout</span>
+        </a>
+
+        <div class="header-actions">
+            <a href="index.html" class="back-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                <span>Back to Home</span>
+            </a>
+
+            <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle theme">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Main Policy Document -->
+<main class="container">
+    <article class="policy-container">
+        <div class="policy-header">
+            <h1>Privacy Policy</h1>
+            <p class="last-updated">Last Updated: October 20, 2026</p>
+        </div>
+
+        <section class="policy-section">
+            <h2>Introduction</h2>
+            <p>
+                TabSprout ("we", "our", or "the extension") is an open-source browser extension designed to help users
+                organize open browser tabs into native Chrome tab groups. We are committed to transparency and respecting
+                your privacy.
+            </p>
+            <div class="highlight-box">
+                <p>
+                    TabSprout runs entirely inside your browser. All clustering, domain parsing, and tab management algorithms
+                    execute 100% locally on your computer. No data is ever transmitted to remote servers.
+                </p>
+            </div>
+        </section>
+
+        <section class="policy-section">
+            <h2>Information Access & Handling</h2>
+            <p>
+                To provide its core functionality, TabSprout accesses the following temporary data during active sorting operations:
+            </p>
+            <ul>
+                <li>
+                    <strong>Tab URLs and Titles:</strong> Read locally in volatile system memory to extract website domain names,
+                    identify search engine queries, and evaluate user-defined project matching rules. This data is never written to disk
+                    or transmitted anywhere.
+                </li>
+                <li>
+                    <strong>Tab Group Metadata:</strong> Read and created locally via the Chrome Tab Groups API to assign group names,
+                    labels, and color properties.
+                </li>
+            </ul>
+        </section>
+
+        <section class="policy-section">
+            <h2>Zero Remote Data Transmission</h2>
+            <p>
+                We do not collect, log, store, sell, or transfer your personal data, web history, or browsing activity:
+            </p>
+            <ul>
+                <li>No analytics or telemetry scripts are included in the extension.</li>
+                <li>No tracking pixels, cookies, or identifier tokens are utilized.</li>
+                <li>No third-party advertising frameworks or external SDKs are loaded.</li>
+                <li>No remote code execution (eval or external script tags) is used, complying with Manifest V3 policies.</li>
+            </ul>
+        </section>
+
+        <section class="policy-section">
+            <h2>Local Settings Storage</h2>
+            <p>
+                User preferences (such as selected grouping strategy, custom project rules, excluded domains, and theme choices)
+                are saved using Chrome's native <code>chrome.storage.sync</code> API.
+            </p>
+            <p>
+                This configuration data remains private to your personal browser profile and synchronizes exclusively through
+                your authenticated Google account if Chrome Sync is enabled on your device. We have no access to this data.
+            </p>
+        </section>
+
+        <section class="policy-section">
+            <h2>Browser Permissions Justification</h2>
+            <p>
+                TabSprout requests the minimum set of permissions necessary to deliver its single purpose:
+            </p>
+            <ul>
+                <li>
+                    <strong>tabs:</strong> Required to query open tabs in the current window to determine their URLs and titles
+                    for local grouping.
+                </li>
+                <li>
+                    <strong>tabGroups:</strong> Required to create, color, label, and collapse native Chrome tab groups.
+                </li>
+                <li>
+                    <strong>storage:</strong> Required to persist user configuration and project rules across browser restarts.
+                </li>
+            </ul>
+        </section>
+
+        <section class="policy-section">
+            <h2>Third-Party Services</h2>
+            <p>
+                The extension does not communicate with any external APIs or third-party web services. When visiting the project's
+                documentation or GitHub repository, the standard privacy policies of GitHub apply.
+            </p>
+        </section>
+
+        <section class="policy-section">
+            <h2>Children's Privacy</h2>
+            <p>
+                TabSprout does not collect personal information from any user, including children under the age of 13.
+            </p>
+        </section>
+
+        <section class="policy-section">
+            <h2>Changes to This Policy</h2>
+            <p>
+                We may periodically update this Privacy Policy to reflect improvements or changes in browser platform policies.
+                Any updates will be posted to this page with an updated revision date.
+            </p>
+        </section>
+
+        <section class="policy-section">
+            <h2>Contact Information</h2>
+            <p>
+                If you have questions, feedback, or concerns regarding this Privacy Policy, please visit our
+                <a href="contact.html" style="color: var(--text); font-weight: 600;">Contact Page</a> or email us at
+                <a href="mailto:hello@aniketks.dev" style="color: var(--text); font-weight: 600;">hello@aniketks.dev</a>.
+            </p>
+        </section>
+    </article>
+</main>
+
+<!-- Footer -->
+<footer>
+    <div class="container footer-inner">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="icons/icon32.png" width="22" height="22" alt="TabSprout" style="border-radius: 4px;"/>
+            <span style="font-weight: 700; color: var(--text);">TabSprout</span>
+            <span>&copy; 2026. Released under the MIT License.</span>
+        </div>
+
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="contact.html">Contact</a>
+            <a href="https://github.com/aniketks1/tabsprout" target="_blank">GitHub</a>
+        </div>
+    </div>
+</footer>
+
+<!-- Theme Toggle Script -->
+<script>
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const root = document.documentElement;
+
+    function getInitialTheme() {
+        const saved = localStorage.getItem('tabsprout_web_theme');
+        if (saved) return saved;
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    function setTheme(theme) {
+        root.classList.remove('light', 'dark');
+        root.classList.add(theme);
+        localStorage.setItem('tabsprout_web_theme', theme);
+    }
+
+    setTheme(getInitialTheme());
+
+    themeToggleBtn.addEventListener('click', () => {
+        const isDark = root.classList.contains('dark') ||
+            (!root.classList.contains('light') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        setTheme(isDark ? 'light' : 'dark');
+    });
+</script>
+
+</body>
+</html>

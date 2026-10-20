@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Contact & Support - TabSprout</title>
+    <meta name="description"
+          content="Get in touch with TabSprout support and project maintenance at hello@aniketks.dev."/>
+    <link rel="icon" type="image/png" href="icons/icon32.png"/>
+
+    <style>
+        /* Brand Theme Tokens: Sprout Green #9de440, Forest Pine #033220, Crisp Tab White #fafcf9 */
+        :root {
+            --bg: #fafcf9;
+            --card: #ffffff;
+            --card-border: #e2ebe3;
+            --card-hover: #f0f6f1;
+            --text: #033220;
+            --text-muted: #3b6653;
+            --primary: #9de440;
+            --primary-hover: #8fd433;
+            --primary-text: #033220;
+            --primary-glow: rgba(157, 228, 64, 0.35);
+            --badge-bg: rgba(157, 228, 64, 0.18);
+            --badge-border: rgba(157, 228, 64, 0.45);
+            --tab-bg: #f2f7f3;
+            --tab-border: #d4e2d6;
+            --nav-bg: rgba(250, 252, 249, 0.9);
+            --shadow-sm: 0 1px 3px rgba(3, 50, 32, 0.05);
+            --shadow-md: 0 6px 20px -2px rgba(3, 50, 32, 0.08);
+            --shadow-lg: 0 16px 36px -4px rgba(3, 50, 32, 0.12);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not(.light) {
+                --bg: #0b0f14;
+                --card: #131922;
+                --card-border: #1e2633;
+                --card-hover: #1a222f;
+                --text: #fafcf9;
+                --text-muted: #8c9ba8;
+                --primary: #9de440;
+                --primary-hover: #adea59;
+                --primary-text: #0b0f14;
+                --primary-glow: rgba(157, 228, 64, 0.28);
+                --badge-bg: rgba(157, 228, 64, 0.12);
+                --badge-border: rgba(157, 228, 64, 0.32);
+                --tab-bg: #080b0f;
+                --tab-border: #18202b;
+                --nav-bg: rgba(11, 15, 20, 0.9);
+                --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+                --shadow-md: 0 6px 20px -2px rgba(0, 0, 0, 0.45);
+                --shadow-lg: 0 16px 36px -4px rgba(0, 0, 0, 0.65);
+            }
+        }
+
+        .dark {
+            --bg: #0b0f14;
+            --card: #131922;
+            --card-border: #1e2633;
+            --card-hover: #1a222f;
+            --text: #fafcf9;
+            --text-muted: #8c9ba8;
+            --primary: #9de440;
+            --primary-hover: #adea59;
+            --primary-text: #0b0f14;
+            --primary-glow: rgba(157, 228, 64, 0.28);
+            --badge-bg: rgba(157, 228, 64, 0.12);
+            --badge-border: rgba(157, 228, 64, 0.32);
+            --tab-bg: #080b0f;
+            --tab-border: #18202b;
+            --nav-bg: rgba(11, 15, 20, 0.9);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+            --shadow-md: 0 6px 20px -2px rgba(0, 0, 0, 0.45);
+            --shadow-lg: 0 16px 36px -4px rgba(0, 0, 0, 0.65);
+        }
+
+        .light {
+            --bg: #fafcf9;
+            --card: #ffffff;
+            --card-border: #e2ebe3;
+            --card-hover: #f0f6f1;
+            --text: #033220;
+            --text-muted: #3b6653;
+            --primary: #9de440;
+            --primary-hover: #8fd433;
+            --primary-text: #033220;
+            --primary-glow: rgba(157, 228, 64, 0.35);
+            --badge-bg: rgba(157, 228, 64, 0.18);
+            --badge-border: rgba(157, 228, 64, 0.45);
+            --tab-bg: #f2f7f3;
+            --tab-border: #d4e2d6;
+            --nav-bg: rgba(250, 252, 249, 0.9);
+            --shadow-sm: 0 1px 3px rgba(3, 50, 32, 0.05);
+            --shadow-md: 0 6px 20px -2px rgba(3, 50, 32, 0.08);
+            --shadow-lg: 0 16px 36px -4px rgba(3, 50, 32, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.25s ease, border-color 0.25s ease, color 0.2s ease;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header without navigation */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background-color: var(--nav-bg);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 68px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 700;
+            font-size: 1.15rem;
+            letter-spacing: -0.02em;
+        }
+
+        .brand img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--text);
+            background-color: var(--card-hover);
+        }
+
+        .theme-toggle-btn {
+            background: transparent;
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle-btn:hover {
+            background-color: var(--card-hover);
+            color: var(--text);
+        }
+
+        /* Contact Section */
+        .contact-container {
+            max-width: 680px;
+            margin: 64px auto 96px;
+            text-align: center;
+        }
+
+        .contact-card {
+            background-color: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 48px 36px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .contact-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 14px;
+            background-color: var(--badge-bg);
+            border: 1px solid var(--badge-border);
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 20px;
+        }
+
+        .contact-card h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        .contact-card p.lead {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 520px;
+            margin: 0 auto 36px;
+        }
+
+        /* Email Card Box */
+        .email-box {
+            background-color: var(--tab-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .email-label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .email-address {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            word-break: break-all;
+        }
+
+        .email-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-action-primary {
+            background-color: var(--primary);
+            color: var(--primary-text);
+            border: none;
+            box-shadow: 0 2px 8px var(--primary-glow);
+        }
+
+        .btn-action-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-action-secondary {
+            background-color: var(--card);
+            color: var(--text);
+            border: 1px solid var(--card-border);
+        }
+
+        .btn-action-secondary:hover {
+            background-color: var(--card-hover);
+            transform: translateY(-1px);
+        }
+
+        /* Channels list */
+        .channels-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            text-align: left;
+            margin-top: 24px;
+        }
+
+        .channel-item {
+            background-color: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 18px;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .channel-item:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .channel-item h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .channel-item p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* Copy toast feedback */
+        .toast {
+            display: none;
+            font-size: 0.82rem;
+            color: var(--primary-text);
+            background-color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            margin-top: 8px;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--card-border);
+            padding: 32px 0;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+
+        .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .footer-links a:hover {
+            color: var(--text);
+        }
+
+        @media (max-width: 640px) {
+            .contact-card {
+                padding: 32px 20px;
+            }
+            .contact-card h1 {
+                font-size: 1.75rem;
+            }
+            .email-address {
+                font-size: 1.2rem;
+            }
+            .channels-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header (Navigation Removed) -->
+<header>
+    <div class="container nav-inner">
+        <a href="index.html" class="brand">
+            <img src="icons/icon32.png" alt="TabSprout"/>
+            <span>TabSprout</span>
+        </a>
+
+        <div class="header-actions">
+            <a href="index.html" class="back-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                <span>Back to Home</span>
+            </a>
+
+            <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle theme">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Main Contact Card -->
+<main class="container">
+    <div class="contact-container">
+        <div class="contact-card">
+            <div class="contact-badge">Support & Inquiries</div>
+            <h1>Contact Us</h1>
+            <p class="lead">
+                Have a question, feedback, feature proposal, or bug report? Reach out directly to the maintainer.
+            </p>
+
+            <!-- Direct Email Box -->
+            <div class="email-box">
+                <span class="email-label">Official Contact Email</span>
+                <div class="email-address" id="emailText">hello@aniketks.dev</div>
+                <div class="email-actions">
+                    <a href="mailto:hello@aniketks.dev" class="btn-action btn-action-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                        <span>Send Email</span>
+                    </a>
+                    <button type="button" onclick="copyEmail()" class="btn-action btn-action-secondary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        <span id="copyBtnText">Copy Address</span>
+                    </button>
+                </div>
+                <div class="toast" id="copyToast">Email copied to clipboard</div>
+            </div>
+
+            <!-- Alternative Channels -->
+            <div class="channels-grid">
+                <a href="https://github.com/aniketks1/tabsprout/issues" target="_blank" class="channel-item">
+                    <div>
+                        <h3>
+                            <span>GitHub Issues</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="7" y1="17" x2="17" y2="7"></line>
+                                <polyline points="7 7 17 7 17 17"></polyline>
+                            </svg>
+                        </h3>
+                        <p>Report technical bugs, request new strategies, or track upcoming roadmap items.</p>
+                    </div>
+                </a>
+
+                <a href="https://github.com/aniketks1/tabsprout" target="_blank" class="channel-item">
+                    <div>
+                        <h3>
+                            <span>GitHub Repository</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="7" y1="17" x2="17" y2="7"></line>
+                                <polyline points="7 7 17 7 17 17"></polyline>
+                            </svg>
+                        </h3>
+                        <p>Explore the full open-source codebase, view releases, or submit pull requests.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer>
+    <div class="container footer-inner">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="icons/icon32.png" width="22" height="22" alt="TabSprout" style="border-radius: 4px;"/>
+            <span style="font-weight: 700; color: var(--text);">TabSprout</span>
+            <span>&copy; 2026. Released under the MIT License.</span>
+        </div>
+
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="contact.html">Contact</a>
+            <a href="https://github.com/aniketks1/tabsprout" target="_blank">GitHub</a>
+        </div>
+    </div>
+</footer>
+
+<!-- Scripts -->
+<script>
+    // Theme Toggle
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const root = document.documentElement;
+
+    function getInitialTheme() {
+        const saved = localStorage.getItem('tabsprout_web_theme');
+        if (saved) return saved;
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    function setTheme(theme) {
+        root.classList.remove('light', 'dark');
+        root.classList.add(theme);
+        localStorage.setItem('tabsprout_web_theme', theme);
+    }
+
+    setTheme(getInitialTheme());
+
+    themeToggleBtn.addEventListener('click', () => {
+        const isDark = root.classList.contains('dark') ||
+            (!root.classList.contains('light') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        setTheme(isDark ? 'light' : 'dark');
+    });
+
+    // Copy Email to Clipboard
+    function copyEmail() {
+        const email = 'hello@aniketks.dev';
+        navigator.clipboard.writeText(email).then(() => {
+            const toast = document.getElementById('copyToast');
+            const btnText = document.getElementById('copyBtnText');
+            toast.style.display = 'inline-block';
+            btnText.textContent = 'Copied';
+            setTimeout(() => {
+                toast.style.display = 'none';
+                btnText.textContent = 'Copy Address';
+            }, 2500);
+        });
+    }
+</script>
+
+</body>
+</html>
