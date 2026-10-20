@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light Theme (Tab White #fafcf9 canvas, Forest Green #033220 text, Sprout Green #9de440 primary) */
+    --background: 100 33% 98%;
+    --foreground: 157 89% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 157 89% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 157 89% 10%;
+    --primary: 86 75% 57%;
+    --primary-hover: 86 75% 50%;
+    --primary-foreground: 157 89% 10%;
+    --secondary: 120 18% 94%;
+    --secondary-foreground: 157 60% 18%;
+    --muted: 120 18% 94%;
+    --muted-foreground: 157 25% 40%;
+    --accent: 86 65% 90%;
+    --accent-foreground: 157 89% 10%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 120 15% 88%;
+    --input: 120 15% 88%;
+    --ring: 86 75% 57%;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not(.light) {
+      /* Dark Theme (Sleek Obsidian/Slate canvas, Tab White #fafcf9 text, Sprout Green #9de440 primary) */
+      --background: 215 28% 7%;
+      --foreground: 100 33% 98%;
+      --card: 215 22% 11%;
+      --card-foreground: 100 33% 98%;
+      --popover: 215 22% 11%;
+      --popover-foreground: 100 33% 98%;
+      --primary: 86 75% 57%;
+      --primary-hover: 86 75% 65%;
+      --primary-foreground: 215 28% 7%;
+      --secondary: 215 18% 15%;
+      --secondary-foreground: 100 33% 98%;
+      --muted: 215 18% 15%;
+      --muted-foreground: 215 12% 65%;
+      --accent: 215 18% 18%;
+      --accent-foreground: 86 75% 57%;
+      --destructive: 0 63% 31%;
+      --destructive-foreground: 0 0% 98%;
+      --border: 215 15% 18%;
+      --input: 215 15% 18%;
+      --ring: 86 75% 57%;
+    }
+  }
+
+  .dark {
+    /* Dark Theme (Sleek Obsidian/Slate canvas, Tab White #fafcf9 text, Sprout Green #9de440 primary) */
+    --background: 215 28% 7%;
+    --foreground: 100 33% 98%;
+    --card: 215 22% 11%;
+    --card-foreground: 100 33% 98%;
+    --popover: 215 22% 11%;
+    --popover-foreground: 100 33% 98%;
+    --primary: 86 75% 57%;
+    --primary-hover: 86 75% 65%;
+    --primary-foreground: 215 28% 7%;
+    --secondary: 215 18% 15%;
+    --secondary-foreground: 100 33% 98%;
+    --muted: 215 18% 15%;
+    --muted-foreground: 215 12% 65%;
+    --accent: 215 18% 18%;
+    --accent-foreground: 86 75% 57%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 215 15% 18%;
+    --input: 215 15% 18%;
+    --ring: 86 75% 57%;
+  }
+
+  .light {
+    --background: 100 33% 98%;
+    --foreground: 157 89% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 157 89% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 157 89% 10%;
+    --primary: 86 75% 57%;
+    --primary-hover: 86 75% 50%;
+    --primary-foreground: 157 89% 10%;
+    --secondary: 120 18% 94%;
+    --secondary-foreground: 157 60% 18%;
+    --muted: 120 18% 94%;
+    --muted-foreground: 157 25% 40%;
+    --accent: 86 65% 90%;
+    --accent-foreground: 157 89% 10%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 120 15% 88%;
+    --input: 120 15% 88%;
+    --ring: 86 75% 57%;
+  }
+}
+
+body {
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Smooth surface transition fallback */
+body, .bg-background, .bg-card, .bg-secondary, .border-border {
+  transition: background-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Native View Transition custom styling */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.25);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.4);
+}
