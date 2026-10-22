@@ -126,7 +126,7 @@ You can install TabSprout using any of the following three methods:
 
 ### Method 1: Chrome Web Store (Recommended)
 
-1. Visit the [TabSprout Chrome Web Store Listing](https://chromewebstore.google.com/). _(Link will activate once public store review is approved)._
+1. Visit the [TabSprout Chrome Web Store Listing](https://chromewebstore.google.com/detail/tabsprout/apffcbgebihkmefjcicaafmafimeipil).
 2. Click **Add to Chrome**.
 3. Pin **TabSprout** to your browser toolbar for quick one-click access.
 
